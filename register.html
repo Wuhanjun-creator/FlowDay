@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlowDay · 注册</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="page-auth auth-register">
+    <main class="auth-layout">
+      <section class="auth-left">
+        <div class="left-brand">
+          <div class="left-title">FlowDay</div>
+          <div class="left-subtitle">Daily Rhythm</div>
+        </div>
+        <div class="record">
+          <div class="record-disc">
+            <span class="record-label">FD</span>
+          </div>
+          <div class="record-center"></div>
+        </div>
+      </section>
+      <section class="auth-right">
+        <div class="auth-card">
+          <h1>注册</h1>
+          <p>开启您的 FlowDay 空间。</p>
+          <form class="auth-form" id="registerForm" data-step="1">
+            <div class="stepper-bars" aria-hidden="true">
+              <span class="step-bar active" data-step="1"></span>
+              <span class="step-bar" data-step="2"></span>
+            </div>
+            <div class="form-frame">
+              <div class="form-slider">
+                <div class="form-step" data-step="1">
+                <label>
+                  <span>邮箱</span>
+                  <input id="registerEmail" type="email" placeholder="you@flowday.com" required />
+                </label>
+                <label>
+                  <span>密码</span>
+                  <div class="input-with-action">
+                    <input id="registerPassword" type="password" placeholder="请输入密码" required />
+                    <button class="ghost tiny password-toggle" type="button" data-target="registerPassword" aria-label="显示密码">
+                      <svg class="icon-eye" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M2.5 12s3.8-6 9.5-6 9.5 6 9.5 6-3.8 6-9.5 6-9.5-6-9.5-6z" />
+                        <circle cx="12" cy="12" r="3.5" />
+                      </svg>
+                      <svg class="icon-eye-off" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M3.5 5.5l17 13M2.5 12s3.8-6 9.5-6c2.2 0 4.1.7 5.6 1.7M21.5 12s-3.8 6-9.5 6c-2.6 0-4.9-.8-6.6-2" />
+                        <path d="M9.5 9.5a3.5 3.5 0 0 0 4.9 4.9" />
+                      </svg>
+                    </button>
+                  </div>
+                </label>
+                <label>
+                  <span>确认密码</span>
+                  <div class="input-with-action">
+                    <input id="registerConfirm" type="password" placeholder="再次输入密码" required />
+                    <button class="ghost tiny password-toggle" type="button" data-target="registerConfirm" aria-label="显示密码">
+                      <svg class="icon-eye" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M2.5 12s3.8-6 9.5-6 9.5 6 9.5 6-3.8 6-9.5 6-9.5-6-9.5-6z" />
+                        <circle cx="12" cy="12" r="3.5" />
+                      </svg>
+                      <svg class="icon-eye-off" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M3.5 5.5l17 13M2.5 12s3.8-6 9.5-6c2.2 0 4.1.7 5.6 1.7M21.5 12s-3.8 6-9.5 6c-2.6 0-4.9-.8-6.6-2" />
+                        <path d="M9.5 9.5a3.5 3.5 0 0 0 4.9 4.9" />
+                      </svg>
+                    </button>
+                  </div>
+                </label>
+                <button class="solid" type="button" id="registerNext">下一步</button>
+                </div>
+                <div class="form-step" data-step="2">
+                <label>
+                  <span>昵称</span>
+                  <input id="registerName" type="text" placeholder="你的昵称" required />
+                </label>
+                <div class="gender-field" role="radiogroup" aria-label="性别">
+                  <button class="gender-option" type="button" data-value="female">女</button>
+                  <button class="gender-option" type="button" data-value="male">男</button>
+                </div>
+                <input id="registerGender" type="hidden" />
+                <div class="step-actions">
+                  <button class="ghost" type="button" id="registerBackBtn">返回</button>
+                  <button class="primary" type="submit">创建并进入</button>
+                </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          <div class="auth-error" id="registerError" hidden></div>
+          <div class="auth-switch">
+            <span>已有账号？</span>
+            <a href="login.html">去登录</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="register.js"></script>
+  </body>
+</html>

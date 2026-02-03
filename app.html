@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlowDay · 应用</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="page-app">
+    <div class="ambient" aria-hidden="true">
+      <span class="orb orb-a"></span>
+      <span class="orb orb-b"></span>
+      <span class="orb orb-c"></span>
+    </div>
+
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">FlowDay</div>
+          <div class="brand-tagline tagline-rotator tagline-small">
+            <span>让每一天<br />在正确的节律中慢慢<br />绽放。</span>
+            <span>Let every day bloom slowly,<br />in the right rhythm.</span>
+          </div>
+        </div>
+        <nav class="nav" aria-label="primary">
+          <button class="nav-item active" data-nav="overview" type="button">
+            <span data-i18n="navOverview">今日概览</span>
+          </button>
+          <button class="nav-item" data-nav="insights" type="button">
+            <span data-i18n="navInsights">节奏洞察</span>
+          </button>
+          <button class="nav-item" data-nav="settings" type="button">
+            <span data-i18n="navSettings">应用设置</span>
+          </button>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="status-dot"></div>
+          <div>
+            <div class="status-title" data-i18n="storageLocal">已保存到本地</div>
+            <div class="status-desc" id="storageStatus" data-i18n="saved">未上传云端</div>
+          </div>
+        </div>
+      </aside>
+
+      <div class="app-main">
+        <header class="topbar">
+          <div class="welcome-block">
+            <h2 class="greeting" id="greeting"></h2>
+            <div class="date-value" id="dateLabel"></div>
+          </div>
+        </header>
+
+        <main class="content">
+          <div class="page page-overview active" data-page="overview">
+            <div class="page-grid">
+              <section class="card overview">
+                <div class="card-head">
+                  <h2 data-i18n="overviewTitle">今日概览</h2>
+                  <span class="chip" id="selectedDateLabel">02/03</span>
+                </div>
+                <div class="overview-body">
+                  <div class="overview-top">
+                    <div class="progress-block">
+                      <div class="progress-ring" id="progressRing" style="--progress: 0%">
+                        <div class="progress-center">
+                          <div class="progress-value" id="progressValue">0%</div>
+                        </div>
+                      </div>
+                      <div class="progress-note" data-i18n="completion">完成率</div>
+                    </div>
+                    <div class="stats">
+                      <div class="stat">
+                        <div class="stat-value" id="statTotal">0</div>
+                        <div class="stat-label" data-i18n="statTotal">任务总数</div>
+                      </div>
+                      <div class="stat">
+                        <div class="stat-value" id="statDone">0</div>
+                        <div class="stat-label" data-i18n="statDone">已完成</div>
+                      </div>
+                      <div class="stat">
+                        <div class="stat-value" id="statRemain">0</div>
+                        <div class="stat-label" data-i18n="statRemain">待完成</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="priority">
+                    <div class="priority-title" data-i18n="priorityTitle">核心事项</div>
+                    <ul class="priority-list" id="priorityList"></ul>
+                    <div class="empty" id="priorityEmpty" data-i18n="priorityEmpty">还没有设置核心任务</div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="card planning">
+                <div class="card-head">
+                  <h2 data-i18n="planningTitle">任务规划</h2>
+                  <span class="chip" data-i18n="planningHint">按开始时间排序</span>
+                </div>
+                <ul class="planning-list" id="planningList"></ul>
+                <div class="empty" id="planningEmpty" data-i18n="planningEmpty">还没有安排开始时间的任务</div>
+              </section>
+
+              <section id="tasks" class="card tasks">
+                <div class="card-head">
+                  <h2 data-i18n="tasksTitle">任务清单</h2>
+                </div>
+                <div class="task-composer">
+                  <form id="taskForm" class="task-form">
+                    <div class="form-row">
+                      <label class="field">
+                        <span data-i18n="taskTitleLabel">任务名称</span>
+                        <input id="taskTitle" type="text" required data-i18n-placeholder="taskTitlePlaceholder" />
+                      </label>
+                      <label class="field">
+                        <span data-i18n="taskTimeLabel">开始时间</span>
+                        <input id="taskTime" type="time" required />
+                      </label>
+                    </div>
+                    <div class="form-row">
+                      <label class="field">
+                        <span data-i18n="taskPriorityLabel">优先级</span>
+                        <select id="taskPriority">
+                          <option value="core" data-i18n="priorityCore">核心</option>
+                          <option value="important" data-i18n="priorityImportant">重要</option>
+                          <option value="normal" data-i18n="priorityNormal" selected>普通</option>
+                        </select>
+                      </label>
+                      <label class="field">
+                        <span data-i18n="taskRepeatLabel">重复</span>
+                        <select id="taskRepeat">
+                          <option value="none" data-i18n="repeatNone">不重复</option>
+                          <option value="daily" data-i18n="repeatDaily">每天</option>
+                          <option value="weekly" data-i18n="repeatWeekly">每周</option>
+                          <option value="monthly" data-i18n="repeatMonthly">每月</option>
+                        </select>
+                      </label>
+                    </div>
+                    <div class="form-row">
+                      <label class="field">
+                        <span data-i18n="taskDurationLabel">时长 (分钟，可选)</span>
+                        <input id="taskDuration" type="number" min="5" step="5" placeholder="45" />
+                      </label>
+                      <label class="field">
+                        <span data-i18n="taskNoteLabel">备注</span>
+                        <input id="taskNote" type="text" data-i18n-placeholder="taskNotePlaceholder" />
+                      </label>
+                    </div>
+                    <div class="form-actions">
+                      <button class="solid" type="submit" id="taskSubmit" data-i18n="taskAdd">添加任务</button>
+                      <button class="ghost" type="button" id="cancelEdit" data-i18n="taskCancel" hidden>取消编辑</button>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="filters">
+                  <button class="filter active" data-filter="all" type="button" data-i18n="filterAll">全部</button>
+                  <button class="filter" data-filter="todo" type="button" data-i18n="filterTodo">待完成</button>
+                  <button class="filter" data-filter="done" type="button" data-i18n="filterDone">已完成</button>
+                </div>
+
+                <ul class="task-list" id="taskList"></ul>
+                <div class="empty" id="taskEmpty" data-i18n="taskEmpty">还没有任务，开始添加吧</div>
+              </section>
+            </div>
+          </div>
+
+          <div class="page page-insights" data-page="insights">
+            <section class="card insights">
+              <div class="card-head">
+                <h2 data-i18n="insightsTitle">节奏洞察</h2>
+                <span class="chip" id="rangeLabel" data-i18n="rangeWeek">近 7 天</span>
+              </div>
+              
+              <div class="insights-body">
+                <div class="insights-visuals">
+                  <div class="insights-row">
+                    <div class="insights-summary">
+                      <div class="stat">
+                        <div class="stat-value" id="rangeTotal">0</div>
+                        <div class="stat-label" data-i18n="statTotal">任务总数</div>
+                      </div>
+                      <div class="stat">
+                        <div class="stat-value" id="rangeDone">0</div>
+                        <div class="stat-label" data-i18n="statDone">已完成</div>
+                      </div>
+                      <div class="stat">
+                        <div class="stat-value" id="rangeRate">0%</div>
+                        <div class="stat-label" data-i18n="insightsRate">完成率</div>
+                      </div>
+                    </div>
+                    
+                    <div class="progress-block insights-ring-block">
+                      <div class="progress-ring" id="insightsRing" style="--progress: 0%">
+                        <div class="progress-center">
+                          <div class="progress-value" id="insightsRingValue">0%</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="insights-chart" id="rangeChart"></div>
+                  <div class="empty" id="rangeEmpty" data-i18n="rangeEmpty">这段时间还没有任务记录</div>
+                </div>
+
+                <div class="insights-controls-sidebar">
+                  <h3 data-i18n="timeRange">时间范围</h3>
+                  <div class="control-group">
+                    <label>
+                      <span data-i18n="rangeStart">开始</span>
+                      <input id="rangeStart" type="date" />
+                    </label>
+                    <label>
+                      <span data-i18n="rangeEnd">结束</span>
+                      <input id="rangeEnd" type="date" />
+                    </label>
+                  </div>
+                  <div class="range-actions vertical">
+                    <button class="filter" type="button" data-range="7" data-i18n="rangeWeek">近 7 天</button>
+                    <button class="filter" type="button" data-range="30" data-i18n="rangeMonth">近 30 天</button>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div class="page page-settings" data-page="settings">
+            <section class="card settings">
+              <div class="card-head">
+                <h2 data-i18n="settingsTitle">应用设置</h2>
+                <span class="chip" data-i18n="settingsHint">自定义你的节奏</span>
+              </div>
+              <div class="settings-grid">
+                <div class="settings-block">
+                  <h3 data-i18n="language">语言</h3>
+                  <select id="langSelect">
+                    <option value="zh" data-i18n="langZh">中文</option>
+                    <option value="en" data-i18n="langEn">English</option>
+                  </select>
+                </div>
+                <div class="settings-block">
+                  <h3 data-i18n="presetTitle">默认配色</h3>
+                  <div class="preset-grid">
+                    <button class="preset" type="button" data-preset="linen">
+                      <span></span><span></span><span></span>
+                      <strong data-i18n="presetLinen">雾白</strong>
+                    </button>
+                    <button class="preset" type="button" data-preset="sage">
+                      <span></span><span></span><span></span>
+                      <strong data-i18n="presetSage">杉绿</strong>
+                    </button>
+                    <button class="preset" type="button" data-preset="noir">
+                      <span></span><span></span><span></span>
+                      <strong data-i18n="presetNoir">夜影</strong>
+                    </button>
+                    <button class="preset" type="button" data-preset="ember">
+                      <span></span><span></span><span></span>
+                      <strong data-i18n="presetEmber">暮火</strong>
+                    </button>
+                  </div>
+                </div>
+                <div class="settings-block">
+                  <h3 data-i18n="themeTitle">自定义颜色</h3>
+                  <label class="color-field">
+                    <span data-i18n="primaryColor">主色</span>
+                    <input id="primaryColor" type="color" />
+                  </label>
+                  <label class="color-field">
+                    <span data-i18n="accentColor">强调色</span>
+                    <input id="accentColor" type="color" />
+                  </label>
+                  <label class="color-field">
+                    <span data-i18n="backgroundColor">背景色</span>
+                    <input id="backgroundColor" type="color" />
+                  </label>
+                  <button class="ghost" id="resetTheme" type="button" data-i18n="resetTheme">恢复默认</button>
+                </div>
+                <div class="settings-block">
+                  <h3 data-i18n="storageTitle">数据存储</h3>
+                  <p class="drawer-note" data-i18n="storageHint">所有任务与设置仅保存在本机，不会上传。</p>
+                </div>
+              </div>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>

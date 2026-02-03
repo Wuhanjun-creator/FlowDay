@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlowDay · 登录</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="page-auth auth-login">
+    <main class="auth-layout">
+      <section class="auth-left">
+        <div class="left-brand">
+          <div class="left-title">FlowDay</div>
+          <div class="left-subtitle">Daily Rhythm</div>
+        </div>
+        <div class="record">
+          <div class="record-disc">
+            <span class="record-label">FD</span>
+          </div>
+          <div class="record-center"></div>
+        </div>
+      </section>
+      <section class="auth-right">
+        <div class="auth-card">
+          <h1>登录</h1>
+          <p>欢迎回来，继续您的节奏。</p>
+          <form class="auth-form" id="loginForm">
+            <label>
+              <span>邮箱</span>
+              <input id="loginEmail" type="email" placeholder="you@flowday.com" required />
+            </label>
+            <label>
+              <span>密码</span>
+              <div class="input-with-action">
+                <input id="loginPassword" type="password" placeholder="请输入密码" required />
+                <button class="ghost tiny password-toggle" type="button" data-target="loginPassword" aria-label="显示密码">
+                  <svg class="icon-eye" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M2.5 12s3.8-6 9.5-6 9.5 6 9.5 6-3.8 6-9.5 6-9.5-6-9.5-6z" />
+                    <circle cx="12" cy="12" r="3.5" />
+                  </svg>
+                  <svg class="icon-eye-off" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3.5 5.5l17 13M2.5 12s3.8-6 9.5-6c2.2 0 4.1.7 5.6 1.7M21.5 12s-3.8 6-9.5 6c-2.6 0-4.9-.8-6.6-2" />
+                    <path d="M9.5 9.5a3.5 3.5 0 0 0 4.9 4.9" />
+                  </svg>
+                </button>
+              </div>
+            </label>
+            <button class="primary" type="submit">登录</button>
+          </form>
+          <div class="auth-error" id="loginError" hidden></div>
+          <div class="auth-switch">
+            <span>没有账号？</span>
+            <a href="register.html">去注册</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="login.js"></script>
+  </body>
+</html>
