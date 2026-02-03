@@ -73,6 +73,8 @@ registerForm?.addEventListener("submit", async (event) => {
   const password = document.getElementById("registerPassword")?.value || "";
   const name = document.getElementById("registerName")?.value || "";
   const gender = document.getElementById("registerGender")?.value || "";
+  const age = document.getElementById("registerAge")?.value || "";
+  const birthday = document.getElementById("registerBirthday")?.value || "";
   const submitButton = registerForm.querySelector("button[type=\"submit\"]");
 
   if (submitButton) submitButton.disabled = true;
@@ -84,7 +86,8 @@ registerForm?.addEventListener("submit", async (event) => {
       profile: {
         name,
         gender,
-        birthday: ""
+        age,
+        birthday
       }
     });
     window.location.href = "app.html";

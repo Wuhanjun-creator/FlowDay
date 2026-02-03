@@ -29,6 +29,15 @@
           <button class="nav-item" data-nav="insights" type="button">
             <span data-i18n="navInsights">节奏洞察</span>
           </button>
+          <button class="nav-item" data-nav="journal" type="button">
+            <span data-i18n="navJournal">记录今日</span>
+          </button>
+          <button class="nav-item" data-nav="habits" type="button">
+            <span data-i18n="navHabits">习惯跟踪</span>
+          </button>
+          <button class="nav-item" data-nav="quicklist" type="button">
+            <span data-i18n="navQuicklist">即时清单</span>
+          </button>
           <button class="nav-item" data-nav="settings" type="button">
             <span data-i18n="navSettings">应用设置</span>
           </button>
@@ -86,8 +95,7 @@
 
               <section class="card planning">
                 <div class="card-head">
-                  <h2 data-i18n="planningTitle">任务规划</h2>
-                  <span class="chip" data-i18n="planningHint">按开始时间排序</span>
+                  <h2 data-i18n="planningTitle">今日日程</h2>
                 </div>
                 <ul class="planning-list" id="planningList"></ul>
                 <div class="empty" id="planningEmpty" data-i18n="planningEmpty">还没有安排开始时间的任务</div>
@@ -271,6 +279,62 @@
                   <h3 data-i18n="storageTitle">数据存储</h3>
                   <p class="drawer-note" data-i18n="storageHint">所有任务与设置仅保存在本机，不会上传。</p>
                 </div>
+              </div>
+            </section>
+          </div>
+
+          <div class="page page-journal" data-page="journal">
+            <section class="card journal">
+              <div class="card-head">
+                <h2 data-i18n="journalTitle">记录今日</h2>
+                <span class="chip" id="journalDateLabel"></span>
+              </div>
+              <div class="journal-body">
+                <div class="journal-editor">
+                  <textarea id="journalContent" placeholder="记录今天的想法、感受或成就..." rows="10"></textarea>
+                </div>
+                <div class="journal-actions">
+                  <button class="solid" id="saveJournal" data-i18n="saveJournal">保存记录</button>
+                </div>
+                <div class="journal-history">
+                  <h3 data-i18n="journalHistory">历史记录</h3>
+                  <ul class="journal-list" id="journalList"></ul>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div class="page page-habits" data-page="habits">
+            <section class="card habits">
+              <div class="card-head">
+                <h2 data-i18n="habitsTitle">习惯跟踪</h2>
+              </div>
+              <div class="habits-body">
+                <div class="habits-form">
+                  <input type="text" id="habitInput" placeholder="添加新习惯..." />
+                  <button class="solid" id="addHabit" data-i18n="addHabit">添加</button>
+                </div>
+                <ul class="habits-list" id="habitsList"></ul>
+                <div class="habits-streaks">
+                  <h3 data-i18n="streaksTitle">连续天数</h3>
+                  <div class="streaks-list" id="streaksList"></div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div class="page page-quicklist" data-page="quicklist">
+            <section class="card quicklist">
+              <div class="card-head">
+                <h2 data-i18n="quicklistTitle">即时清单</h2>
+                <span class="chip" id="quicklistCount">0</span>
+              </div>
+              <div class="quicklist-body">
+                <div class="quicklist-form">
+                  <input type="text" id="quicklistInput" placeholder="快速添加任务..." />
+                  <button class="solid" id="addQuicklist" data-i18n="addQuicklist">添加</button>
+                </div>
+                <ul class="quicklist-list" id="quicklistList"></ul>
               </div>
             </section>
           </div>

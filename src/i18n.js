@@ -75,12 +75,26 @@ export const dictionary = {
     edit: "编辑",
     remove: "删除",
     done: "完成",
-    todo: "待办"
+    todo: "待办",
+    navJournal: "记录今日",
+    journalTitle: "记录今日",
+    saveJournal: "保存记录",
+    journalHistory: "历史记录",
+    navHabits: "习惯跟踪",
+    habitsTitle: "习惯跟踪",
+    addHabit: "添加",
+    streaksTitle: "连续天数",
+    navQuicklist: "即时清单",
+    quicklistTitle: "即时清单",
+    addQuicklist: "添加"
   },
   en: {
     navOverview: "Overview",
     navInsights: "Insights",
     navSettings: "Settings",
+    navJournal: "Today's Journal",
+    navHabits: "Habit Tracker",
+    navQuicklist: "Quick List",
     storageLocal: "Saved locally",
     saved: "Not uploaded",
     saving: "Saving...",
@@ -153,7 +167,15 @@ export const dictionary = {
     edit: "Edit",
     remove: "Delete",
     done: "Done",
-    todo: "Todo"
+    todo: "Todo",
+    journalTitle: "Today's Journal",
+    saveJournal: "Save Journal",
+    journalHistory: "History",
+    habitsTitle: "Habit Tracker",
+    addHabit: "Add",
+    streaksTitle: "Streaks",
+    quicklistTitle: "Quick List",
+    addQuicklist: "Add"
   }
 };
 

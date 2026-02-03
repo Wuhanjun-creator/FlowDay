@@ -62,7 +62,19 @@ const elements = {
   rangeChart: $("#rangeChart"),
   insightsRing: $("#insightsRing"),
   insightsRingValue: $("#insightsRingValue"),
-  rangeEmpty: $("#rangeEmpty")
+  rangeEmpty: $("#rangeEmpty"),
+  journalDateLabel: $("#journalDateLabel"),
+  journalContent: $("#journalContent"),
+  saveJournal: $("#saveJournal"),
+  journalList: $("#journalList"),
+  habitInput: $("#habitInput"),
+  addHabit: $("#addHabit"),
+  habitsList: $("#habitsList"),
+  streaksList: $("#streaksList"),
+  quicklistInput: $("#quicklistInput"),
+  addQuicklist: $("#addQuicklist"),
+  quicklistList: $("#quicklistList"),
+  quicklistCount: $("#quicklistCount")
 };
 
 const presets = {
@@ -315,12 +327,31 @@ const renderInsights = (tasks, lang) => {
   elements.rangeChart.innerHTML = dates
     .map((date) => {
       const dayTasks = rangeTasks.filter((task) => task.date === date);
-      const dayDone = dayTasks.filter((task) => task.status === "done").length;
-      const ratio = dayTasks.length ? dayDone / dayTasks.length : 0;
+      
+      // 按优先级分类
+      const coreTasks = dayTasks.filter((task) => task.priority === "core");
+      const importantTasks = dayTasks.filter((task) => task.priority === "important");
+      const normalTasks = dayTasks.filter((task) => task.priority === "normal");
+      
+      // 计算各优先级的完成率
+      const coreRatio = coreTasks.length ? coreTasks.filter(t => t.status === "done").length / coreTasks.length : 0;
+      const importantRatio = importantTasks.length ? importantTasks.filter(t => t.status === "done").length / importantTasks.length : 0;
+      const normalRatio = normalTasks.length ? normalTasks.filter(t => t.status === "done").length / normalTasks.length : 0;
+      
       const label = formatShortDate(date, lang);
       return `
-        <div class="chart-bar" style="--ratio:${ratio}">
-          <span></span>
+        <div class="chart-bar-container">
+          <div class="chart-bar-stacked">
+            <div class="chart-bar-layer chart-bar-core" style="--ratio:${coreRatio}">
+              <span></span>
+            </div>
+            <div class="chart-bar-layer chart-bar-important" style="--ratio:${importantRatio}">
+              <span></span>
+            </div>
+            <div class="chart-bar-layer chart-bar-normal" style="--ratio:${normalRatio}">
+              <span></span>
+            </div>
+          </div>
           <small>${label}</small>
         </div>
       `;
@@ -545,6 +576,9 @@ const hydrate = async () => {
   });
   saveSettings({ ...settings, selectedDate: today });
   setRangeDays(7);
+  initJournal();
+  initHabits();
+  initQuicklist();
 };
 
 const handleFormSubmit = (event) => {
@@ -681,6 +715,281 @@ const handleNavClick = (event) => {
   showPage(button.dataset.nav);
 };
 
+// Journal functions
+const initJournal = () => {
+  if (!elements.journalDateLabel) return;
+  const today = new Date().toISOString().split('T')[0];
+  elements.journalDateLabel.textContent = today;
+  loadJournalEntries();
+};
+
+const loadJournalEntries = () => {
+  if (!elements.journalList) return;
+  try {
+    const entries = JSON.parse(localStorage.getItem("flowday-journal") || "[]");
+    elements.journalList.innerHTML = entries
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .map((entry) => `
+        <li class="journal-item" data-date="${entry.date}">
+          <div class="journal-item-date">${entry.date}</div>
+          <div class="journal-item-content">${entry.content.substring(0, 100)}${entry.content.length > 100 ? '...' : ''}</div>
+        </li>
+      `)
+      .join("");
+  } catch (error) {
+    console.error("Failed to load journal entries:", error);
+  }
+};
+
+const handleSaveJournal = () => {
+  if (!elements.journalContent || !elements.journalDateLabel) return;
+  const content = elements.journalContent.value.trim();
+  if (!content) return;
+  
+  const date = elements.journalDateLabel.textContent;
+  const newEntry = {
+    id: Date.now().toString(),
+    date,
+    content,
+    createdAt: Date.now()
+  };
+  
+  try {
+    const entries = JSON.parse(localStorage.getItem("flowday-journal") || "[]");
+    const existingIndex = entries.findIndex((entry) => entry.date === date);
+    
+    if (existingIndex >= 0) {
+      entries[existingIndex] = newEntry;
+    } else {
+      entries.push(newEntry);
+    }
+    
+    localStorage.setItem("flowday-journal", JSON.stringify(entries));
+    elements.journalContent.value = "";
+    loadJournalEntries();
+    
+    // Show success feedback
+    const originalText = elements.saveJournal.textContent;
+    elements.saveJournal.textContent = "保存成功";
+    setTimeout(() => {
+      elements.saveJournal.textContent = originalText;
+    }, 2000);
+  } catch (error) {
+    console.error("Failed to save journal entry:", error);
+  }
+};
+
+// Habits functions
+const initHabits = () => {
+  loadHabits();
+  updateStreaks();
+};
+
+const loadHabits = () => {
+  if (!elements.habitsList) return;
+  try {
+    const habits = JSON.parse(localStorage.getItem("flowday-habits") || "[]");
+    const today = new Date().toISOString().split('T')[0];
+    
+    elements.habitsList.innerHTML = habits
+      .map((habit) => {
+        const isCompletedToday = habit.completedDates?.includes(today) || false;
+        return `
+          <li class="habit-item" data-id="${habit.id}">
+            <span class="habit-name">${habit.name}</span>
+            <div class="habit-checkbox ${isCompletedToday ? 'checked' : ''}" onclick="toggleHabit('${habit.id}')">
+              ${isCompletedToday ? '✓' : ''}
+            </div>
+          </li>
+        `;
+      })
+      .join("");
+  } catch (error) {
+    console.error("Failed to load habits:", error);
+  }
+};
+
+const handleAddHabit = () => {
+  if (!elements.habitInput || !elements.habitsList) return;
+  const name = elements.habitInput.value.trim();
+  if (!name) return;
+  
+  const newHabit = {
+    id: Date.now().toString(),
+    name,
+    createdAt: Date.now(),
+    completedDates: []
+  };
+  
+  try {
+    const habits = JSON.parse(localStorage.getItem("flowday-habits") || "[]");
+    habits.push(newHabit);
+    localStorage.setItem("flowday-habits", JSON.stringify(habits));
+    elements.habitInput.value = "";
+    loadHabits();
+    updateStreaks();
+  } catch (error) {
+    console.error("Failed to add habit:", error);
+  }
+};
+
+const toggleHabit = (habitId) => {
+  try {
+    const habits = JSON.parse(localStorage.getItem("flowday-habits") || "[]");
+    const today = new Date().toISOString().split('T')[0];
+    
+    const updatedHabits = habits.map((habit) => {
+      if (habit.id === habitId) {
+        const isCompletedToday = habit.completedDates?.includes(today) || false;
+        return {
+          ...habit,
+          completedDates: isCompletedToday
+            ? habit.completedDates.filter((date) => date !== today)
+            : [...(habit.completedDates || []), today]
+        };
+      }
+      return habit;
+    });
+    
+    localStorage.setItem("flowday-habits", JSON.stringify(updatedHabits));
+    loadHabits();
+    updateStreaks();
+  } catch (error) {
+    console.error("Failed to toggle habit:", error);
+  }
+};
+
+const updateStreaks = () => {
+  if (!elements.streaksList) return;
+  try {
+    const habits = JSON.parse(localStorage.getItem("flowday-habits") || "[]");
+    const today = new Date();
+    
+    const streaks = habits.map((habit) => {
+      let streak = 0;
+      let currentDate = new Date(today);
+      
+      while (true) {
+        const dateString = currentDate.toISOString().split('T')[0];
+        if (habit.completedDates?.includes(dateString)) {
+          streak++;
+          currentDate.setDate(currentDate.getDate() - 1);
+        } else {
+          break;
+        }
+      }
+      
+      return { ...habit, streak };
+    });
+    
+    elements.streaksList.innerHTML = streaks
+      .map((habit) => `
+        <div class="streak-item">
+          <div class="streak-name">${habit.name}</div>
+          <div class="streak-count">${habit.streak}</div>
+        </div>
+      `)
+      .join("");
+  } catch (error) {
+    console.error("Failed to update streaks:", error);
+  }
+};
+
+// Quicklist functions
+const initQuicklist = () => {
+  loadQuicklist();
+  updateQuicklistCount();
+};
+
+const loadQuicklist = () => {
+  if (!elements.quicklistList) return;
+  try {
+    const items = JSON.parse(localStorage.getItem("flowday-quicklist") || "[]");
+    
+    elements.quicklistList.innerHTML = items
+      .map((item) => `
+        <li class="quicklist-item ${item.completed ? 'completed' : ''}" data-id="${item.id}">
+          <span class="quicklist-name">${item.name}</span>
+          <div class="quicklist-actions">
+            <button class="icon-btn" onclick="toggleQuicklistItem('${item.id}')">
+              ${item.completed ? '↩' : '✓'}
+            </button>
+            <button class="icon-btn" onclick="deleteQuicklistItem('${item.id}')">
+              ×
+            </button>
+          </div>
+        </li>
+      `)
+      .join("");
+  } catch (error) {
+    console.error("Failed to load quicklist:", error);
+  }
+};
+
+const handleAddQuicklist = () => {
+  if (!elements.quicklistInput || !elements.quicklistList) return;
+  const name = elements.quicklistInput.value.trim();
+  if (!name) return;
+  
+  const newItem = {
+    id: Date.now().toString(),
+    name,
+    completed: false,
+    createdAt: Date.now()
+  };
+  
+  try {
+    const items = JSON.parse(localStorage.getItem("flowday-quicklist") || "[]");
+    items.push(newItem);
+    localStorage.setItem("flowday-quicklist", JSON.stringify(items));
+    elements.quicklistInput.value = "";
+    loadQuicklist();
+    updateQuicklistCount();
+  } catch (error) {
+    console.error("Failed to add quicklist item:", error);
+  }
+};
+
+const toggleQuicklistItem = (itemId) => {
+  try {
+    const items = JSON.parse(localStorage.getItem("flowday-quicklist") || "[]");
+    const updatedItems = items.map((item) => {
+      if (item.id === itemId) {
+        return { ...item, completed: !item.completed };
+      }
+      return item;
+    });
+    localStorage.setItem("flowday-quicklist", JSON.stringify(updatedItems));
+    loadQuicklist();
+    updateQuicklistCount();
+  } catch (error) {
+    console.error("Failed to toggle quicklist item:", error);
+  }
+};
+
+const deleteQuicklistItem = (itemId) => {
+  try {
+    const items = JSON.parse(localStorage.getItem("flowday-quicklist") || "[]");
+    const updatedItems = items.filter((item) => item.id !== itemId);
+    localStorage.setItem("flowday-quicklist", JSON.stringify(updatedItems));
+    loadQuicklist();
+    updateQuicklistCount();
+  } catch (error) {
+    console.error("Failed to delete quicklist item:", error);
+  }
+};
+
+const updateQuicklistCount = () => {
+  if (!elements.quicklistCount) return;
+  try {
+    const items = JSON.parse(localStorage.getItem("flowday-quicklist") || "[]");
+    const pendingCount = items.filter((item) => !item.completed).length;
+    elements.quicklistCount.textContent = pendingCount;
+  } catch (error) {
+    console.error("Failed to update quicklist count:", error);
+  }
+};
+
 const setupListeners = () => {
   elements.taskForm.addEventListener("submit", handleFormSubmit);
   elements.taskList.addEventListener("click", handleTaskAction);
@@ -700,6 +1009,31 @@ const setupListeners = () => {
   elements.rangeButtons.forEach((button) => button.addEventListener("click", handleRangeQuick));
 
   elements.navItems.forEach((item) => item.addEventListener("click", handleNavClick));
+
+  // Journal listeners
+  if (elements.saveJournal) {
+    elements.saveJournal.addEventListener("click", handleSaveJournal);
+  }
+
+  // Habits listeners
+  if (elements.addHabit) {
+    elements.addHabit.addEventListener("click", handleAddHabit);
+  }
+  if (elements.habitInput) {
+    elements.habitInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") handleAddHabit();
+    });
+  }
+
+  // Quicklist listeners
+  if (elements.addQuicklist) {
+    elements.addQuicklist.addEventListener("click", handleAddQuicklist);
+  }
+  if (elements.quicklistInput) {
+    elements.quicklistInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") handleAddQuicklist();
+    });
+  }
 };
 
 setupListeners();

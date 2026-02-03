@@ -23,7 +23,7 @@
       <section class="auth-right">
         <div class="auth-card">
           <h1>登录</h1>
-          <p>欢迎回来，继续您的节奏。</p>
+          <p>欢迎回来，继续您的节奏</p>
           <form class="auth-form" id="loginForm">
             <label>
               <span>邮箱</span>
@@ -50,12 +50,33 @@
           <div class="auth-error" id="loginError" hidden></div>
           <div class="auth-switch">
             <span>没有账号？</span>
-            <a href="register.html">去注册</a>
+            <button class="auth-link" id="goToRegister">去注册</button>
           </div>
         </div>
       </section>
     </main>
 
     <script type="module" src="login.js"></script>
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        const authRight = document.querySelector('.auth-right');
+        authRight.classList.add('fade-in');
+        
+        setTimeout(() => {
+          authRight.classList.remove('fade-in');
+        }, 500);
+      });
+
+      document.getElementById('goToRegister').addEventListener('click', function(e) {
+        e.preventDefault();
+        const authRight = document.querySelector('.auth-right');
+        
+        authRight.classList.add('fade-out');
+        
+        setTimeout(() => {
+          window.location.href = 'register.html';
+        }, 500);
+      });
+    </script>
   </body>
 </html>
