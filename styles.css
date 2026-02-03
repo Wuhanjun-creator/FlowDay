@@ -229,6 +229,38 @@ a {
   gap: 16px;
 }
 
+.lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.lang-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  font-size: 14px;
+  color: var(--muted);
+  transition: color 0.2s ease;
+  font-family: inherit;
+}
+
+.lang-btn:hover {
+  color: var(--text);
+}
+
+.lang-btn.active {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.lang-divider {
+  color: var(--muted);
+  font-size: 14px;
+}
+
 .marketing-hero {
   display: grid;
   grid-template-columns: 1.3fr 1fr;
@@ -443,7 +475,7 @@ a {
 
 .auth-card {
   width: 100%;
-  max-width: 380px;
+  max-width: 500px;
   --auth-field-width: 68%;
   display: flex;
   flex-direction: column;
