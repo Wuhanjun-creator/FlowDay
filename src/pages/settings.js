@@ -12,6 +12,7 @@ import {
   updatePresetUI,
   saveSelectedTheme
 } from "../shared/common.js";
+import { showAlert, showPrompt } from "../shared/modal.js";
 
 // DOM 元素
 const elements = {
@@ -82,15 +83,19 @@ const deleteCustomTheme = async (name) => {
 const handleSaveTheme = async () => {
   if (!currentTheme) return;
   
-  const name = prompt('请输入配色名称：');
+  const name = await showPrompt({
+    title: '保存配色',
+    message: '请输入配色名称：',
+    placeholder: '我的配色'
+  });
   if (!name || name.trim() === '') return;
   
   const success = await saveCustomTheme(name.trim(), currentTheme);
   if (success) {
-    alert('配色保存成功！');
+    await showAlert('配色保存成功！');
     updatePresetButtons();
   } else {
-    alert('配色保存失败，请重试。');
+    await showAlert('配色保存失败，请重试。');
   }
 };
 
@@ -145,7 +150,7 @@ const updatePresetButtons = async () => {
       if (success) {
         updatePresetButtons();
       } else {
-        alert('删除失败，请重试。');
+        await showAlert('删除失败，请重试。');
       }
     });
   });

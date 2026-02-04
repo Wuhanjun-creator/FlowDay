@@ -4,7 +4,7 @@ const SESSION_KEY = "flowday-session";
 const AUTH_KEY_STORAGE = "flowday-auth-key";
 const GUEST_KEY = "flowday-guest-id";
 const PASSWORD_ITERATIONS = 120000;
-const USER_STORE = "users";
+export const USER_STORE = "users";
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
@@ -51,7 +51,7 @@ const getCryptoKey = async () => {
   return crypto.subtle.importKey("raw", raw, "AES-GCM", false, ["encrypt", "decrypt"]);
 };
 
-const encryptPayload = async (payload) => {
+export const encryptPayload = async (payload) => {
   const iv = crypto.getRandomValues(new Uint8Array(12));
   const key = await getCryptoKey();
   const encoded = encoder.encode(JSON.stringify(payload));
@@ -59,7 +59,7 @@ const encryptPayload = async (payload) => {
   return `${bytesToBase64(iv)}.${bytesToBase64(new Uint8Array(cipher))}`;
 };
 
-const decryptPayload = async (payload) => {
+export const decryptPayload = async (payload) => {
   const [ivPart, dataPart] = payload.split(".");
   if (!ivPart || !dataPart) {
     throw new Error("账户数据已损坏。请重新注册或清空本地数据。");
@@ -75,7 +75,7 @@ const decryptPayload = async (payload) => {
   }
 };
 
-const derivePasswordHash = async (password, saltB64, iterations = PASSWORD_ITERATIONS) => {
+export const derivePasswordHash = async (password, saltB64, iterations = PASSWORD_ITERATIONS) => {
   const salt = base64ToBytes(saltB64);
   const baseKey = await crypto.subtle.importKey("raw", encoder.encode(password), "PBKDF2", false, [
     "deriveBits"
@@ -93,7 +93,7 @@ const derivePasswordHash = async (password, saltB64, iterations = PASSWORD_ITERA
   return bytesToBase64(new Uint8Array(bits));
 };
 
-const createPasswordHash = async (password) => {
+export const createPasswordHash = async (password) => {
   const salt = crypto.getRandomValues(new Uint8Array(16));
   const saltB64 = bytesToBase64(salt);
   const hash = await derivePasswordHash(password, saltB64, PASSWORD_ITERATIONS);
@@ -107,7 +107,7 @@ const hashEmail = async (email) => {
 
 let dbPromise;
 
-const openDb = () => {
+export const openDb = () => {
   if (dbPromise) return dbPromise;
   dbPromise = new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, DB_VERSION);

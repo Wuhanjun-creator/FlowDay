@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>个人资料 - FlowDay</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script>
+      // 预加载主题 - 在页面渲染前应用，防止闪烁
+      (function() {
+        const cachedTheme = localStorage.getItem('flowday-current-theme');
+        if (cachedTheme) {
+          try {
+            const theme = JSON.parse(cachedTheme);
+            const root = document.documentElement;
+            root.style.setProperty('--bg', theme.background);
+            root.style.setProperty('--primary', theme.primary);
+            root.style.setProperty('--accent', theme.accent);
+            // 计算派生颜色
+            const isDark = parseInt(theme.background.replace('#', ''), 16) < 0x888888;
+            root.style.setProperty('--text', isDark ? '#f5f5f5' : '#111111');
+            root.style.setProperty('--muted', isDark ? '#a1a1aa' : '#6b7280');
+            root.style.setProperty('--panel', isDark ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.7)');
+            root.style.setProperty('--panel-strong', isDark ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.92)');
+            root.style.setProperty('--panel-deep', isDark ? '#0f0f0f' : '#e6e4dc');
+            root.style.setProperty('--border', isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)');
+            root.style.setProperty('--accent-soft', theme.accent + '40');
+            root.style.setProperty('--glow', theme.accent + '26');
+            root.style.setProperty('--button-solid', isDark ? '#ffffff' : '#111111');
+            root.style.colorScheme = isDark ? 'dark' : 'light';
+          } catch (e) {}
+        }
+      })();
+    </script>
+  </head>
+  <body class="page-app">
+    <div class="ambient" aria-hidden="true">
+      <span class="orb orb-a"></span>
+      <span class="orb orb-b"></span>
+      <span class="orb orb-c"></span>
+    </div>
+
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">FlowDay</div>
+          <div class="brand-tagline tagline-rotator tagline-small">
+            <span>让每一天<br />在正确的节律中慢慢<br />绽放。</span>
+            <span>Let every day <br bloom slowly,<br />in the right rhythm.</span>
+          </div>
+        </div>
+        <nav class="nav" aria-label="primary">
+          <a href="overview.html" class="nav-item" data-nav="overview">
+            <span data-i18n="navOverview">今日概览</span>
+          </a>
+          <a href="insights.html" class="nav-item" data-nav="insights">
+            <span data-i18n="navInsights">节奏洞察</span>
+          </a>
+          <a href="journal.html" class="nav-item" data-nav="journal">
+            <span data-i18n="navJournal">记录今日</span>
+          </a>
+          <a href="habits.html" class="nav-item" data-nav="habits">
+            <span data-i18n="navHabits">习惯跟踪</span>
+          </a>
+          <a href="quicklist.html" class="nav-item" data-nav="quicklist">
+            <span data-i18n="navQuicklist">即时清单</span>
+          </a>
+          <a href="profile.html" class="nav-item active" data-nav="profile">
+            <span data-i18n="navProfile">个人资料</span>
+          </a>
+          <a href="settings.html" class="nav-item" data-nav="settings">
+            <span data-i18n="navSettings">应用设置</span>
+          </a>
+        </nav>
+      </aside>
+
+      <div class="app-main">
+        <header class="topbar">
+          <div class="welcome-block">
+            <h2 class="greeting" id="greeting"></h2>
+            <div class="date-value" id="dateLabel"></div>
+          </div>
+        </header>
+
+        <main class="content">
+          <div class="page page-profile active">
+            <section class="card profile">
+              <div class="card-head">
+                <h2 data-i18n="profileTitle">个人资料</h2>
+                <span class="chip" data-i18n="profileHint">管理您的账户信息</span>
+              </div>
+              <div class="profile-body">
+                <div class="profile-avatar-section">
+                  <div class="profile-avatar" id="profileAvatar">
+                    <span id="avatarInitial">U</span>
+                  </div>
+                  <div class="profile-info">
+                    <h3 id="profileName">用户</h3>
+                    <p id="profileEmail">user@example.com</p>
+                    <span class="chip" id="profileMode">注册用户</span>
+                  </div>
+                </div>
+
+                <form class="profile-form" id="profileForm">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="editName" data-i18n="profileName">昵称</label>
+                      <input type="text" id="editName" name="name" placeholder="请输入昵称" />
+                    </div>
+                    <div class="form-group">
+                      <label for="editEmail" data-i18n="profileEmail">邮箱</label>
+                      <input type="email" id="editEmail" name="email" placeholder="请输入邮箱" disabled />
+                      <small class="form-hint" data-i18n="emailHint">邮箱不可修改</small>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="editGender" data-i18n="profileGender">性别</label>
+                      <select id="editGender" name="gender">
+                        <option value="">请选择</option>
+                        <option value="male">男</option>
+                        <option value="female">女</option>
+                        <option value="other">其他</option>
+                        <option value="secret">保密</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="editAge" data-i18n="profileAge">年龄</label>
+                      <input type="number" id="editAge" name="age" min="1" max="150" placeholder="请输入年龄" />
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="editBirthday" data-i18n="profileBirthday">生日</label>
+                      <input type="date" id="editBirthday" name="birthday" />
+                    </div>
+                  </div>
+
+                  <div class="form-actions">
+                    <button type="submit" class="solid" data-i18n="saveProfile">保存修改</button>
+                  </div>
+                </form>
+
+                <div class="profile-divider"></div>
+
+                <div class="password-section">
+                  <h3 data-i18n="changePassword">修改密码</h3>
+                  <form class="password-form" id="passwordForm">
+                    <div class="form-group">
+                      <label for="currentPassword" data-i18n="currentPassword">当前密码</label>
+                      <input type="password" id="currentPassword" name="currentPassword" placeholder="请输入当前密码" />
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label for="newPassword" data-i18n="newPassword">新密码</label>
+                        <input type="password" id="newPassword" name="newPassword" placeholder="请输入新密码" />
+                      </div>
+                      <div class="form-group">
+                        <label for="confirmPassword" data-i18n="confirmPassword">确认密码</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="请再次输入新密码" />
+                      </div>
+                    </div>
+                    <div class="form-actions">
+                      <button type="submit" class="solid" data-i18n="updatePassword">更新密码</button>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="profile-divider"></div>
+
+                <div class="account-actions">
+                  <h3 data-i18n="accountActions">账户操作</h3>
+                  <div class="action-buttons">
+                    <button type="button" class="ghost" id="logoutBtn" data-i18n="logout">退出登录</button>
+                    <button type="button" class="danger" id="deleteAccountBtn" data-i18n="deleteAccount">注销账户</button>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script type="module" src="src/pages/profile.js"></script>
+  </body>
+</html>

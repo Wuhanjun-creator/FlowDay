@@ -7,6 +7,7 @@ import {
   initOutsideClick,
   formatDate
 } from "../shared/common.js";
+import { showAlert, showConfirm } from "../shared/modal.js";
 
 // DOM 元素
 const elements = {
@@ -63,10 +64,10 @@ const saveHabitLogs = (logs) => {
 };
 
 // 添加习惯
-const addHabit = () => {
+const addHabit = async () => {
   const name = elements.habitInput.value.trim();
   if (!name) {
-    alert('请输入习惯名称');
+    await showAlert('请输入习惯名称');
     return;
   }
 
@@ -74,7 +75,7 @@ const addHabit = () => {
   
   // 检查是否已存在
   if (habits.some(h => h.name === name)) {
-    alert('该习惯已存在');
+    await showAlert('该习惯已存在');
     return;
   }
 
@@ -91,8 +92,8 @@ const addHabit = () => {
 };
 
 // 删除习惯
-const deleteHabit = (id) => {
-  if (!confirm('确定要删除这个习惯吗？')) return;
+const deleteHabit = async (id) => {
+  if (!await showConfirm('确定要删除这个习惯吗？')) return;
   
   const habits = getHabits();
   const filtered = habits.filter(h => h.id !== id);

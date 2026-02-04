@@ -94,7 +94,25 @@ export const dictionary = {
     streaksTitle: "连续天数",
     navQuicklist: "即时清单",
     quicklistTitle: "即时清单",
-    addQuicklist: "添加"
+    addQuicklist: "添加",
+    navProfile: "个人资料",
+    profileTitle: "个人资料",
+    profileHint: "管理您的账户信息",
+    profileName: "昵称",
+    profileEmail: "邮箱",
+    profileGender: "性别",
+    profileAge: "年龄",
+    profileBirthday: "生日",
+    emailHint: "邮箱不可修改",
+    saveProfile: "保存修改",
+    changePassword: "修改密码",
+    currentPassword: "当前密码",
+    newPassword: "新密码",
+    confirmPassword: "确认密码",
+    updatePassword: "更新密码",
+    accountActions: "账户操作",
+    logout: "退出登录",
+    deleteAccount: "注销账户"
   },
   en: {
     navOverview: "Overview",
@@ -191,7 +209,25 @@ export const dictionary = {
     addHabit: "Add",
     streaksTitle: "Streaks",
     quicklistTitle: "Quick List",
-    addQuicklist: "Add"
+    addQuicklist: "Add",
+    navProfile: "Profile",
+    profileTitle: "Profile",
+    profileHint: "Manage your account",
+    profileName: "Name",
+    profileEmail: "Email",
+    profileGender: "Gender",
+    profileAge: "Age",
+    profileBirthday: "Birthday",
+    emailHint: "Email cannot be changed",
+    saveProfile: "Save Changes",
+    changePassword: "Change Password",
+    currentPassword: "Current Password",
+    newPassword: "New Password",
+    confirmPassword: "Confirm Password",
+    updatePassword: "Update Password",
+    accountActions: "Account Actions",
+    logout: "Logout",
+    deleteAccount: "Delete Account"
   }
 };
 

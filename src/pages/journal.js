@@ -7,6 +7,7 @@ import {
   initOutsideClick,
   formatDate
 } from "../shared/common.js";
+import { showAlert, showConfirm } from "../shared/modal.js";
 
 // DOM 元素
 const elements = {
@@ -41,10 +42,10 @@ const saveJournals = (journals) => {
 };
 
 // 保存日记条目
-const saveJournalEntry = () => {
+const saveJournalEntry = async () => {
   const content = elements.journalContent.value.trim();
   if (!content) {
-    alert('请输入日记内容');
+    await showAlert('请输入日记内容');
     return;
   }
 
@@ -73,12 +74,12 @@ const saveJournalEntry = () => {
   elements.journalContent.value = '';
   renderJournals();
   updateDateLabel();
-  alert('日记保存成功！');
+  await showAlert('日记保存成功！');
 };
 
 // 删除日记
-const deleteJournal = (id) => {
-  if (!confirm('确定要删除这条日记吗？')) return;
+const deleteJournal = async (id) => {
+  if (!await showConfirm('确定要删除这条日记吗？')) return;
   
   const journals = getJournals();
   const filtered = journals.filter(j => j.id !== id);

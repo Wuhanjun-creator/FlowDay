@@ -5,6 +5,7 @@ import {
   initSidebar,
   initOutsideClick
 } from "../shared/common.js";
+import { showAlert } from "../shared/modal.js";
 
 // DOM 元素
 const elements = {
@@ -39,10 +40,10 @@ const saveQuicklist = (items) => {
 };
 
 // 添加快速任务
-const addQuicklistItem = () => {
+const addQuicklistItem = async () => {
   const text = elements.quicklistInput.value.trim();
   if (!text) {
-    alert('请输入任务内容');
+    await showAlert('请输入任务内容');
     return;
   }
 
