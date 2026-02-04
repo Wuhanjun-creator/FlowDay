@@ -216,7 +216,8 @@
                     </label>
                   </div>
                   <div class="range-actions vertical">
-                    <button class="filter" type="button" data-range="7" data-i18n="rangeWeek">近 7 天</button>
+                    <button class="filter active" type="button" data-range="7" data-i18n="rangeWeek">近 7 天</button>
+                    <button class="filter" type="button" data-range="14" data-i18n="rangeFortnight">近 14 天</button>
                     <button class="filter" type="button" data-range="30" data-i18n="rangeMonth">近 30 天</button>
                   </div>
                 </div>
@@ -228,19 +229,66 @@
             <section class="card settings">
               <div class="card-head">
                 <h2 data-i18n="settingsTitle">应用设置</h2>
-                <span class="chip" data-i18n="settingsHint">自定义你的节奏</span>
+                <span class="chip" data-i18n="settingsHint">自定义您的节奏</span>
               </div>
               <div class="settings-grid">
                 <div class="settings-block">
                   <h3 data-i18n="language">语言</h3>
-                  <select id="langSelect">
-                    <option value="zh" data-i18n="langZh">中文</option>
-                    <option value="en" data-i18n="langEn">English</option>
-                  </select>
+                  <div class="custom-select" id="langSelectContainer">
+                    <div class="custom-select-header">
+                      <span class="custom-select-value" id="langSelectValue">中文</span>
+                      <span class="custom-select-arrow">▼</span>
+                    </div>
+                    <div class="custom-select-options" id="langSelectOptions">
+                      <div class="custom-select-option" data-value="zh">中文</div>
+                      <div class="custom-select-option" data-value="en">English</div>
+                    </div>
+                    <input type="hidden" id="langSelect" value="zh">
+                  </div>
                 </div>
                 <div class="settings-block">
-                  <h3 data-i18n="presetTitle">默认配色</h3>
+                  <h3 data-i18n="timezone">时区</h3>
+                  <div class="custom-select" id="timezoneSelectContainer">
+                    <div class="custom-select-header">
+                      <span class="custom-select-value" id="timezoneSelectValue">北京时间 (GMT+8)</span>
+                      <span class="custom-select-arrow">▼</span>
+                    </div>
+                    <div class="custom-select-options" id="timezoneSelectOptions">
+                      <div class="custom-select-option" data-value="Asia/Shanghai">北京时间 (GMT+8)</div>
+                      <div class="custom-select-option" data-value="Asia/Tokyo">东京时间 (GMT+9)</div>
+                      <div class="custom-select-option" data-value="Asia/Seoul">首尔时间 (GMT+9)</div>
+                      <div class="custom-select-option" data-value="Asia/Singapore">新加坡时间 (GMT+8)</div>
+                      <div class="custom-select-option" data-value="Asia/Kolkata">孟买时间 (GMT+5:30)</div>
+                      <div class="custom-select-option" data-value="Asia/Dubai">迪拜时间 (GMT+4)</div>
+                      <div class="custom-select-option" data-value="Europe/London">伦敦时间 (GMT+0)</div>
+                      <div class="custom-select-option" data-value="Europe/Paris">巴黎时间 (GMT+1)</div>
+                      <div class="custom-select-option" data-value="Europe/Berlin">柏林时间 (GMT+1)</div>
+                      <div class="custom-select-option" data-value="Europe/Moscow">莫斯科时间 (GMT+3)</div>
+                      <div class="custom-select-option" data-value="America/New_York">纽约时间 (GMT-5)</div>
+                      <div class="custom-select-option" data-value="America/Chicago">芝加哥时间 (GMT-6)</div>
+                      <div class="custom-select-option" data-value="America/Los_Angeles">洛杉矶时间 (GMT-8)</div>
+                      <div class="custom-select-option" data-value="America/Toronto">多伦多时间 (GMT-5)</div>
+                      <div class="custom-select-option" data-value="America/Mexico_City">墨西哥城时间 (GMT-6)</div>
+                      <div class="custom-select-option" data-value="America/Sao_Paulo">圣保罗时间 (GMT-3)</div>
+                      <div class="custom-select-option" data-value="America/Argentina/Buenos_Aires">布宜诺斯艾利斯时间 (GMT-3)</div>
+                      <div class="custom-select-option" data-value="America/Santiago">圣地亚哥时间 (GMT-4)</div>
+                      <div class="custom-select-option" data-value="Australia/Sydney">悉尼时间 (GMT+10)</div>
+                      <div class="custom-select-option" data-value="Australia/Melbourne">墨尔本时间 (GMT+10)</div>
+                      <div class="custom-select-option" data-value="Pacific/Auckland">奥克兰时间 (GMT+12)</div>
+                      <div class="custom-select-option" data-value="Africa/Cairo">开罗时间 (GMT+2)</div>
+                      <div class="custom-select-option" data-value="Africa/Johannesburg">约翰内斯堡时间 (GMT+2)</div>
+                      <div class="custom-select-option" data-value="Africa/Lagos">拉各斯时间 (GMT+1)</div>
+                    </div>
+                    <input type="hidden" id="timezoneSelect" value="Asia/Shanghai">
+                  </div>
+                </div>
+                <div class="settings-block">
+                  <h3 data-i18n="presetTitle">配色</h3>
                   <div class="preset-grid">
+                    <button class="preset" type="button" data-preset="gold">
+                      <span></span><span></span><span></span>
+                      <strong data-i18n="presetGold">雅金</strong>
+                    </button>
                     <button class="preset" type="button" data-preset="linen">
                       <span></span><span></span><span></span>
                       <strong data-i18n="presetLinen">雾白</strong>
@@ -256,6 +304,10 @@
                     <button class="preset" type="button" data-preset="ember">
                       <span></span><span></span><span></span>
                       <strong data-i18n="presetEmber">暮火</strong>
+                    </button>
+                    <button class="preset" type="button" data-preset="ocean">
+                      <span></span><span></span><span></span>
+                      <strong data-i18n="presetOcean">海蓝</strong>
                     </button>
                   </div>
                 </div>
@@ -273,7 +325,7 @@
                     <span data-i18n="backgroundColor">背景色</span>
                     <input id="backgroundColor" type="color" />
                   </label>
-                  <button class="ghost" id="resetTheme" type="button" data-i18n="resetTheme">恢复默认</button>
+                  <button class="ghost" id="saveTheme" type="button" data-i18n="saveTheme">保存当前配色</button>
                 </div>
                 <div class="settings-block">
                   <h3 data-i18n="storageTitle">数据存储</h3>

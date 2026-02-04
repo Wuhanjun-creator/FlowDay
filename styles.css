@@ -1427,6 +1427,14 @@ a {
 .preset[data-preset="ember"] span:nth-child(2) { background: #ffb07a; }
 .preset[data-preset="ember"] span:nth-child(3) { background: #141010; }
 
+.preset[data-preset="ocean"] span:nth-child(1) { background: #1a365d; }
+.preset[data-preset="ocean"] span:nth-child(2) { background: #4299e1; }
+.preset[data-preset="ocean"] span:nth-child(3) { background: #ebf8ff; }
+
+.preset[data-preset="gold"] span:nth-child(1) { background: #8b5a2b; }
+.preset[data-preset="gold"] span:nth-child(2) { background: #e8b47c; }
+.preset[data-preset="gold"] span:nth-child(3) { background: #f9f6f0; }
+
 .color-field {
   display: flex;
   align-items: center;
@@ -1461,6 +1469,123 @@ a {
   margin: 0;
 }
 
+/* Custom Select Styles */
+.custom-select {
+  position: relative;
+  width: 100%;
+}
+
+.custom-select-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.custom-select-header:hover {
+  background: var(--panel-strong);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.custom-select-value {
+  flex: 1;
+  text-align: left;
+}
+
+.custom-select-arrow {
+  font-size: 10px;
+  color: var(--muted);
+  transition: transform 0.2s ease;
+}
+
+.custom-select.open .custom-select-arrow {
+  transform: rotate(180deg);
+}
+
+.custom-select-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 8px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--panel-strong);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+  z-index: 1000;
+  max-height: 300px;
+  overflow-y: auto;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.custom-select-options.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.custom-select-option {
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 13px;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+
+.custom-select-option:last-child {
+  border-bottom: none;
+  border-radius: 0 0 12px 12px;
+}
+
+.custom-select-option:first-child {
+  border-radius: 12px 12px 0 0;
+}
+
+.custom-select-option:hover {
+  background: var(--accent-soft);
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.custom-select-option.selected {
+  background: var(--accent-soft);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* Custom scrollbar for select options */
+.custom-select-options::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-select-options::-webkit-scrollbar-track {
+  background: var(--panel-deep);
+  border-radius: 3px;
+}
+
+.custom-select-options::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.custom-select-options::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
 /* Insights */
 .insights-body {
   display: grid;
@@ -1487,9 +1612,7 @@ a {
   gap: 32px;
 }
 
-.insights-ring-block {
-  /* Reuse progress-block styles */
-}
+
 
 .insights-controls-sidebar {
   background: var(--panel-deep);
@@ -1523,6 +1646,66 @@ a {
 
 .control-group input {
   width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: var(--panel-deep);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  font-family: "Noto Sans SC", "Noto Sans", sans-serif;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* Date input specific styles */
+.control-group input[type="date"] {
+  position: relative;
+  font-family: "Noto Sans SC", "Noto Sans", sans-serif;
+}
+
+/* Custom date picker arrow */
+.control-group input[type="date"]::-webkit-calendar-picker-indicator {
+  background-color: var(--accent);
+  border-radius: 4px;
+  padding: 4px;
+  cursor: pointer;
+  filter: brightness(1.1);
+  transition: all 0.2s ease;
+}
+
+.control-group input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  background-color: var(--primary);
+  filter: brightness(1.2);
+}
+
+/* Hide default date picker arrow in Firefox */
+.control-group input[type="date"]::-moz-calendar-picker-indicator {
+  background-color: var(--accent);
+  border-radius: 4px;
+  padding: 4px;
+  cursor: pointer;
+  filter: brightness(1.1);
+  transition: all 0.2s ease;
+}
+
+.control-group input[type="date"]::-moz-calendar-picker-indicator:hover {
+  background-color: var(--primary);
+  filter: brightness(1.2);
+}
+
+.control-group input:hover {
+  background: var(--panel-strong);
+  border-color: var(--accent-soft);
+}
+
+.control-group input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  background: var(--panel-strong);
 }
 
 .range-actions.vertical {
@@ -1534,14 +1717,27 @@ a {
 .range-actions.vertical .filter {
   width: 100%;
   text-align: left;
-  padding: 10px;
-  border-radius: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
   border: 1px solid var(--border);
+  background: var(--panel);
+  transition: all 0.2s ease;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.range-actions.vertical .filter:hover {
+  background: var(--panel-strong);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
 }
 
 .range-actions.vertical .filter.active {
   background: var(--accent-soft);
   border-color: var(--accent);
+  color: var(--primary);
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(216, 185, 150, 0.2);
 }
 
 .insights-chart {
@@ -1685,6 +1881,7 @@ a {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  line-clamp: 2;
   overflow: hidden;
 }
 

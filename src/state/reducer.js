@@ -6,11 +6,9 @@ export const getTodayISO = () => {
 
 export const defaultSettings = {
   lang: "zh",
-  theme: {
-    primary: "#25374d",
-    accent: "#d8b996",
-    background: "#f1efe9"
-  },
+  timezone: "Asia/Shanghai",
+  // 主题将在应用初始化时从数据库加载
+  theme: null,
   selectedDate: getTodayISO()
 };
 
@@ -40,6 +38,14 @@ export const reducer = (state, action) => {
         settings: {
           ...state.settings,
           lang: action.payload
+        }
+      };
+    case "SET_TIMEZONE":
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          timezone: action.payload
         }
       };
     case "SET_THEME":

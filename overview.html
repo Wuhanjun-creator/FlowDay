@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>今日概览 - FlowDay</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script>
+      // 预加载主题 - 在页面渲染前应用，防止闪烁
+      (function() {
+        const cachedTheme = localStorage.getItem('flowday-current-theme');
+        if (cachedTheme) {
+          try {
+            const theme = JSON.parse(cachedTheme);
+            const root = document.documentElement;
+            root.style.setProperty('--bg', theme.background);
+            root.style.setProperty('--primary', theme.primary);
+            root.style.setProperty('--accent', theme.accent);
+            // 计算派生颜色
+            const isDark = parseInt(theme.background.replace('#', ''), 16) < 0x888888;
+            root.style.setProperty('--text', isDark ? '#f5f5f5' : '#111111');
+            root.style.setProperty('--muted', isDark ? '#a1a1aa' : '#6b7280');
+            root.style.setProperty('--panel', isDark ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.7)');
+            root.style.setProperty('--panel-strong', isDark ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.92)');
+            root.style.setProperty('--panel-deep', isDark ? '#0f0f0f' : '#e6e4dc');
+            root.style.setProperty('--border', isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)');
+            root.style.setProperty('--accent-soft', theme.accent + '40');
+            root.style.setProperty('--glow', theme.accent + '26');
+            root.style.setProperty('--button-solid', isDark ? '#ffffff' : '#111111');
+            root.style.colorScheme = isDark ? 'dark' : 'light';
+          } catch (e) {}
+        }
+      })();
+    </script>
+  </head>
+  <body class="page-app">
+    <div class="ambient" aria-hidden="true">
+      <span class="orb orb-a"></span>
+      <span class="orb orb-b"></span>
+      <span class="orb orb-c"></span>
+    </div>
+
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">FlowDay</div>
+          <div class="brand-tagline tagline-rotator tagline-small">
+            <span>让每一天<br />在正确的节律中慢慢<br />绽放。</span>
+            <span>Let every day <br bloom slowly,<br />in the right rhythm.</span>
+          </div>
+        </div>
+        <nav class="nav" aria-label="primary">
+          <a href="overview.html" class="nav-item active" data-nav="overview">
+            <span data-i18n="navOverview">今日概览</span>
+          </a>
+          <a href="insights.html" class="nav-item" data-nav="insights">
+            <span data-i18n="navInsights">节奏洞察</span>
+          </a>
+          <a href="journal.html" class="nav-item" data-nav="journal">
+            <span data-i18n="navJournal">记录今日</span>
+          </a>
+          <a href="habits.html" class="nav-item" data-nav="habits">
+            <span data-i18n="navHabits">习惯跟踪</span>
+          </a>
+          <a href="quicklist.html" class="nav-item" data-nav="quicklist">
+            <span data-i18n="navQuicklist">即时清单</span>
+          </a>
+          <a href="settings.html" class="nav-item" data-nav="settings">
+            <span data-i18n="navSettings">应用设置</span>
+          </a>
+        </nav>
+      </aside>
+
+      <div class="app-main">
+        <header class="topbar">
+          <div class="welcome-block">
+            <h2 class="greeting" id="greeting"></h2>
+            <div class="date-value" id="dateLabel"></div>
+          </div>
+        </header>
+
+        <main class="content">
+          <div class="page page-overview active">
+            <div class="page-grid">
+              <section class="card overview">
+                <div class="card-head">
+                  <h2 data-i18n="overviewTitle">今日概览</h2>
+                  <span class="chip" id="selectedDateLabel">02/03</span>
+                </div>
+                <div class="overview-body">
+                  <div class="overview-top">
+                    <div class="progress-block">
+                      <div class="progress-ring" id="progressRing" style="--progress: 0%">
+                        <div class="progress-center">
+                          <div class="progress-value" id="progressValue">0%</div>
+                        </div>
+                      </div>
+                      <div class="progress-note" data-i18n="completion">完成率</div>
+                    </div>
+                    <div class="stats">
+                      <div class="stat">
+                        <div class="stat-value" id="statTotal">0</div>
+                        <div class="stat-label" data-i18n="statTotal">任务总数</div>
+                      </div>
+                      <div class="stat">
+                        <div class="stat-value" id="statDone">0</div>
+                        <div class="stat-label" data-i18n="statDone">已完成</div>
+                      </div>
+                      <div class="stat">
+                        <div class="stat-value" id="statRemain">0</div>
+                        <div class="stat-label" data-i18n="statRemain">待完成</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="priority">
+                    <div class="priority-title" data-i18n="priorityTitle">核心事项</div>
+                    <ul class="priority-list" id="priorityList"></ul>
+                    <div class="empty" id="priorityEmpty" data-i18n="priorityEmpty">还没有设置核心任务</div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="card planning">
+                <div class="card-head">
+                  <h2 data-i18n="planningTitle">今日日程</h2>
+                </div>
+                <ul class="planning-list" id="planningList"></ul>
+                <div class="empty" id="planningEmpty" data-i18n="planningEmpty">还没有安排开始时间的任务</div>
+              </section>
+
+              <section id="tasks" class="card tasks">
+                <div class="card-head">
+                  <h2 data-i18n="tasksTitle">任务清单</h2>
+                </div>
+                <div class="task-composer">
+                  <form id="taskForm" class="task-form">
+                    <div class="form-row">
+                      <label class="field">
+                        <span data-i18n="taskTitleLabel">任务名称</span>
+                        <input id="taskTitle" type="text" required data-i18n-placeholder="taskTitlePlaceholder" />
+                      </label>
+                      <label class="field">
+                        <span data-i18n="taskTimeLabel">开始时间</span>
+                        <input id="taskTime" type="time" required />
+                      </label>
+                    </div>
+                    <div class="form-row">
+                      <label class="field">
+                        <span data-i18n="taskPriorityLabel">优先级</span>
+                        <select id="taskPriority">
+                          <option value="core" data-i18n="priorityCore">核心</option>
+                          <option value="important" data-i18n="priorityImportant">重要</option>
+                          <option value="normal" data-i18n="priorityNormal" selected>普通</option>
+                        </select>
+                      </label>
+                      <label class="field">
+                        <span data-i18n="taskRepeatLabel">重复</span>
+                        <select id="taskRepeat">
+                          <option value="none" data-i18n="repeatNone">不重复</option>
+                          <option value="daily" data-i18n="repeatDaily">每天</option>
+                          <option value="weekly" data-i18n="repeatWeekly">每周</option>
+                          <option value="monthly" data-i18n="repeatMonthly">每月</option>
+                        </select>
+                      </label>
+                    </div>
+                    <div class="form-row">
+                      <label class="field">
+                        <span data-i18n="taskDurationLabel">时长 (分钟，可选)</span>
+                        <input id="taskDuration" type="number" min="5" step="5" placeholder="45" />
+                      </label>
+                      <label class="field">
+                        <span data-i18n="taskNoteLabel">备注</span>
+                        <input id="taskNote" type="text" data-i18n-placeholder="taskNotePlaceholder" />
+                      </label>
+                    </div>
+                    <div class="form-actions">
+                      <button class="solid" type="submit" id="taskSubmit" data-i18n="taskAdd">添加任务</button>
+                      <button class="ghost" type="button" id="cancelEdit" data-i18n="taskCancel" hidden>取消编辑</button>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="filters">
+                  <button class="filter active" data-filter="all" type="button" data-i18n="filterAll">全部</button>
+                  <button class="filter" data-filter="todo" type="button" data-i18n="filterTodo">待完成</button>
+                  <button class="filter" data-filter="done" type="button" data-i18n="filterDone">已完成</button>
+                </div>
+
+                <ul class="task-list" id="taskList"></ul>
+                <div class="empty" id="taskEmpty" data-i18n="taskEmpty">还没有任务，开始添加吧</div>
+              </section>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script type="module" src="src/pages/overview.js"></script>
+  </body>
+</html>
